@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: imooc-red-book-nacos
+  cloud:
+    nacos:
+      config:
+        server-addr: 192.168.64.2:8848   # 配置中心的地址
+        file-extension: yaml              # 指定配置的文件格式
+

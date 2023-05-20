@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.imooc.mapper.CommentMapperCustom" >
+
+    <!-- TODO: 作业 思考，阿里规范明确不能超过三表关联，这里已经达到四张表，应该如何优化，使得sql查询变为三表查询甚至两表关联？ -->
+    <select id="getCommentList" resultType="com.imooc.vo.CommentVO" parameterType="Map">
+
+        SELECT
+            c.id as commentId,
+            c.vlog_id	as vlogId,
+            u.id as vlogerId,
+            u.nickname as commentUserNickname,
+            u.face as commentUserFace,
+            c.father_comment_id as fatherCommentId,
+            c.comment_user_id as commentUserId,
+            c.content as content,
+            c.like_counts as likeCounts,
+            fu.nickname as replyedUserNickname,
+            c.create_time as createTime
+        FROM
+            `comment` as c <!--除去关键字-->
+                LEFT JOIN
+            users as u
+            ON
+                c.comment_user_id = u.id
+                LEFT JOIN
+            `comment` as fc
+            ON
+                c.father_comment_id = fc.id
+                LEFT JOIN
+            users as fu
+            ON
+                fc.comment_user_id = fu.id
+        WHERE
+            c.vlog_id = #{vlogId}
+        ORDER BY
+            c.like_counts DESC,
+            c.create_time DESC
+    </select>
+
+</mapper>
